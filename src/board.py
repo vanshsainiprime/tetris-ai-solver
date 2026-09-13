@@ -48,7 +48,14 @@ class Board:
     def get_drop_row(self, piece, column):
         """
         Find the lowest valid row for a piece.
+
+        Returns:
+            int: The lowest valid row index.
+            None: If the piece cannot be placed at row 0.
         """
+
+        if not self.can_place(piece, 0, column):
+            return None
 
         row = 0
 
@@ -62,7 +69,7 @@ class Board:
         Place a piece onto the board.
         """
 
-        if not self.can_place(piece, row, column):
+        if row is None or not self.can_place(piece, row, column):
             return False
 
         for piece_row, piece_column in piece:

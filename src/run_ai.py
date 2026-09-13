@@ -66,6 +66,12 @@ def main():
         current_cells
     )
 
+    current_column = (
+        min(column for row, column in current_cells)
+        if current_cells
+        else 0
+    )
+
     next_queue = detect_next_queue(
         image
     )
@@ -109,10 +115,14 @@ def main():
     # AI
 
 
+    next_rotations = [
+        PIECES[next_piece_type]
+    ]
+
     best_move = find_best_move(
         board,
         PIECES[current_piece_type],
-        PIECES[next_piece_type]
+        next_rotations
     )
 
 
@@ -131,7 +141,8 @@ def main():
     actions = create_action_plan(
         current_piece_type,
         best_move["rotation"],
-        best_move["column"]
+        best_move["column"],
+        current_column
     )
 
 
@@ -181,6 +192,7 @@ def main():
         current_piece_type,
         best_move["rotation"],
         best_move["column"],
+        current_column,
         actions
     )
 

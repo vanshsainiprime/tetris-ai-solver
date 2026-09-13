@@ -21,12 +21,40 @@ def calculate_horizontal_moves(
     return "NONE", 0
 
 
+ROTATION_COLUMN_SHIFTS = {
+    "I": [0, 2],
+    "O": [0],
+    "T": [0, 1, 0, 0],
+    "S": [0, 1],
+    "Z": [0, 1],
+    "J": [0, 1, 0, 0],
+    "L": [0, 1, 0, 0],
+}
+
+
+def get_rotation_shift(
+    piece_type,
+    rotation
+):
+    """
+    Return the horizontal bounding-box shift between the spawn
+    orientation (rotation 0) and the requested rotation.
+    """
+
+    shifts = ROTATION_COLUMN_SHIFTS.get(piece_type)
+
+    if shifts and 0 <= rotation < len(shifts):
+        return shifts[rotation]
+
+    return 0
+
+
 def get_rotation_taps(
     piece_type,
     rotation
 ):
     """
-    Convert AI rotation index into counter-clockwise
+    Convert AI rotation index into clockwise
     taps used by the actual game.
     """
 
@@ -37,7 +65,7 @@ def get_rotation_taps(
     if count == 1:
         return 0
 
-    return (-rotation) % count
+    return rotation % count
 
 
 def create_action_plan(
@@ -68,9 +96,15 @@ def create_action_plan(
     for _ in range(rotation_taps):
         actions.append("ROTATE")
 
+    # Account for bounding-box shift caused by rotation
+    effective_column = current_column + get_rotation_shift(
+        piece_type,
+        rotation
+    )
+
     # Horizontal movement
     direction, amount = calculate_horizontal_moves(
-        current_column,
+        effective_column,
         target_column
     )
 

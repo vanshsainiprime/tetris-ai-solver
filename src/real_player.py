@@ -14,7 +14,7 @@ from controller import create_action_plan
 from adb_controller import ADBController
 from background_worker import calculate_prediction
 
-MAX_PIECES = 10
+MAX_PIECES = 30
 
 STABLE_CHECK_DELAY = 0.10
 MAX_STABILITY_ATTEMPTS = 8
